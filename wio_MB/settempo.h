@@ -1,0 +1,10 @@
+void LastTempo_Text(void);
+void SetTempo_Text(void);
+void Tempo_Init(void);
+void Settempo_Notes(int num);
+void Sendcode_Notes(int num);
+unsigned long CheckTempo(void);
+//void Tempo_Disp(unsigned long interval);
+void Tempo_Disp(int tempover);
+unsigned long Measure(void);
+int RandamList(int num);
