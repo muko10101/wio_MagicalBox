@@ -6,6 +6,7 @@
 #include "settempo.h"
 #include "sendcode.h"
 #include "hit.h"
+#include "SAMD51_InterruptTimer.h"
 
 TFT_eSPI tft = TFT_eSPI();      // 画面表示ライブラリ
 
@@ -17,6 +18,8 @@ enum{STATE_MENU,STATE_SET,STATE_TEMPO,STATE_SEND};    // 状態名
 #define WEB 2     // webでコード登録
 #define LASTTEMPO 1
 #define NOWTEMPO  2
+
+#define TIMING      500000 //0.5s
 
 static int CurState;    // 現在の状態
 static int SelectMode;  // メニュー画面での選択項目
@@ -37,8 +40,9 @@ void setup() {
   pinMode( WIO_5S_RIGHT, INPUT_PULLUP );
   pinMode( WIO_5S_PRESS, INPUT_PULLUP );
 
+  TC.startTimer(TIMING, LoopSend); //0.5秒ごとに指令を送る
+
   Sw_Init();     // SWの初期化
-  //SetCode_Init();
   Screen_Reset();    // スクリーンの初期化
 
   CurState = STATE_MENU;    // 初期状態はメニュー画面
@@ -178,20 +182,20 @@ void loop() {
     case STATE_TEMPO:
 
       /*entry*/
-      VirtualBtn_SetTempo();
-      LastTempo_Text();
-      Tempo_Init();
+      VirtualBtn_SetTempo(); 
+      LastTempo_Text();  // 前回テンポ表示時のタイトルに変更
+      Tempo_Init();  // テンポ表示をはじめからに
 
       do {
         Tempo_Disp(LASTTEMPO);
         if ( Sw_Btn3() == SW_PUSHED ) {
           CurState = STATE_MENU;
         }
-        if ( Sw_Btn1() == SW_PUSHED ) {
+        if ( Sw_Btn1() == SW_PUSHED ) {//ボタン1を押すと
           Screen_Reset();
           VirtualBtn_Blank();
           SetTempo_Text();
-          Measure();
+          Measure();//テンポ設定
           CurState = STATE_SEND;
         }
       } while ( CurState == STATE_TEMPO );
@@ -207,20 +211,20 @@ void loop() {
 
       /*entry*/
       VirtualBtn_OnlyMenu();
-      NowTempo_Text();
-      Tempo_Init();
+      NowTempo_Text();   //現在のテンポ表示時のタイトルに変更
+      Tempo_Init();      //テンポ表示をはじめからに
 
       do {
         Tempo_Disp(NOWTEMPO);
         if ( Sw_Btn3() == SW_PUSHED ) {
           CurState = STATE_MENU;
         }
-        if ( Check_Hit() == HITSOUND ) {
+        if ( Check_Hit() == HITSOUND ) {//打音を計測すると
           Screen_Reset();
           VirtualBtn_Blank();
           SendCode_Text();
-          SampleHits();
-          Send_Serial();
+          SampleHits();//指令を入力する
+          Send_Serial();//PCに指令を送信
           Screen_Reset();
           VirtualBtn_OnlyMenu();
           NowTempo_Text();
