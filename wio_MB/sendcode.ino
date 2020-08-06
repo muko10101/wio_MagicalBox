@@ -19,8 +19,12 @@
 #define SAMPLE_TIMES    4       // sampling times
 #define THE2ST          2       // the 2nd sample
 
+#define UNMATCH  100  //どれにも一致していない
+#define MATCH true
+#define MISS  false
+
 static int codeval;
-static int match = 100;
+static int match = UNMATCH;
 
 void NowTempo_Text() {  // テンポ表示時のタイトル表示
   tft.setTextColor(TFT_MAGENTA);
@@ -118,10 +122,17 @@ void SampleHits(){
 }
 
 void Send_Serial(){
+  boolean matchresult = MISS;
+
   for(int i = 0; i < 8; i++){
     if(codeval == Copy_CodeSet(i)){
       match = i;
+      matchresult = MATCH;
     }
+  }
+
+  if(matchresult == MISS){
+    match = UNMATCH;
   }
 
   tft.setTextSize( CODE_TEXT_SIZE );
