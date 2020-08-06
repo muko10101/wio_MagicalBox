@@ -159,12 +159,12 @@ void Send_Serial(){
 
     case 6:
       Serial.write("Enter");
-      tft.drawString( "CODE : FRASH", CODE_TEXT_XPOS, CODE_TEXT_YPOS );
+      tft.drawString( "CODE : STOP", CODE_TEXT_XPOS, CODE_TEXT_YPOS );
       break;
 
     case 7:
       Serial.write("Space");
-      tft.drawString( "CODE : STOP", CODE_TEXT_XPOS, CODE_TEXT_YPOS );
+      tft.drawString( "CODE : FLASH", CODE_TEXT_XPOS, CODE_TEXT_YPOS );
       break;
 
     default:
