@@ -1,9 +1,9 @@
 #define USIN 0
 
-#define SPN_HIT   LOW     // SWが押されている
-#define SPN_UNHIT HIGH   // SWが押されていない
+#define SPN_HIT   LOW     // スプーンが叩かれた
+#define SPN_UNHIT HIGH   // スプーンが叩かれていない
 
-#define HITSOUND  1   // SWが押された判定
-#define IGNORE    0   // SWを認識しない
+#define HITSOUND  1   // 超音波が認識された判定
+#define IGNORE    0   // 超音波を認識しない
 
-int Check_Hit(void);
+int Check_Hit(void);  //　超音波観測
