@@ -7,19 +7,20 @@
 #define TITLE_TEXT_XPOS 15     // タイトルのx座標
 #define TITLE_TEXT_YPOS 40     // タイトルのy座標
 
-#define MEASURE_DISP_YPOS 80 
+#define MEASURE_DISP_YPOS 80    // maesuring display y position (start position)
 #define MEASURE_DISP_XPOS 10    // maesuring display x position (start position)
 #define MEASURE_DISP_SIZE 5     // charactor size
 #define MEASURE_DISP_SPACE 40   // charactor spacing ( x position increse by this value )
 
 #define CODE_TEXT_SIZE 3      // コード表示の大きさ         
 #define CODE_TEXT_XPOS 10     // コード表示のx座標
-#define CODE_TEXT_YPOS 200     // コード表示のy座標
+#define CODE_TEXT_YPOS 180     // コード表示のy座標
 
 #define SAMPLE_TIMES    4       // sampling times
-#define THE2ST          2       // the 1st sample
+#define THE2ST          2       // the 2nd sample
 
 static int codeval;
+static int match = 100;
 
 void NowTempo_Text() {  // テンポ表示時のタイトル表示
   tft.setTextColor(TFT_MAGENTA);
@@ -40,7 +41,6 @@ void SendCode_Text() {  // 指令入力時のタイトル表示
 void SampleHits(){
   int i;
   int code[4];
-  //int codeval;
   unsigned long pasttime;
   unsigned long interval;
   int waittime;
@@ -118,7 +118,6 @@ void SampleHits(){
 }
 
 void Send_Serial(){
-  int match;
   for(int i = 0; i < 8; i++){
     if(codeval == Copy_CodeSet(i)){
       match = i;
@@ -154,18 +153,18 @@ void Send_Serial(){
       break;
       
     case 5:
-      Serial.write("Upleft");
+      Serial.write("UpLeft");
       tft.drawString( "CODE : UPLEFT", CODE_TEXT_XPOS, CODE_TEXT_YPOS );
       break;
 
     case 6:
       Serial.write("Enter");
-      tft.drawString( "CODE : STOP", CODE_TEXT_XPOS, CODE_TEXT_YPOS );
+      tft.drawString( "CODE : FRASH", CODE_TEXT_XPOS, CODE_TEXT_YPOS );
       break;
 
     case 7:
       Serial.write("Space");
-      tft.drawString( "CODE : FLASH", CODE_TEXT_XPOS, CODE_TEXT_YPOS );
+      tft.drawString( "CODE : STOP", CODE_TEXT_XPOS, CODE_TEXT_YPOS );
       break;
 
     default:
@@ -176,4 +175,41 @@ void Send_Serial(){
 
   return;
   
+}
+
+void LoopSend(){
+  switch(match){
+    case 0:
+      Serial.write("Up");
+      break;
+      
+    case 1:
+      Serial.write("Down");
+      break;
+
+    case 2:
+      Serial.write("Right");
+      break;
+      
+    case 3:
+      Serial.write("Left");
+      break;
+      
+    case 4:
+      Serial.write("UpRight");
+      break;
+      
+    case 5:
+      Serial.write("UpLeft");
+      break;
+
+    case 6:
+      Serial.write("Enter");
+      break;
+
+    case 7:
+      Serial.write("Space");
+      break;
+  }
+  return;
 }
