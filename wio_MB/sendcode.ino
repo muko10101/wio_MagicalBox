@@ -14,7 +14,7 @@
 
 #define CODE_TEXT_SIZE 3      // コード表示の大きさ         
 #define CODE_TEXT_XPOS 10     // コード表示のx座標
-#define CODE_TEXT_YPOS 180     // コード表示のy座標
+#define CODE_TEXT_YPOS 200     // コード表示のy座標
 
 #define SAMPLE_TIMES    4       // sampling times
 #define THE2ST          2       // the 2nd sample
