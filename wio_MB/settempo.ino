@@ -5,11 +5,10 @@
 #define TITLE_TEXT_XPOS 15     // タイトルのx座標
 #define TITLE_TEXT_YPOS 40     // タイトルのy座標
 
-#define MEASURE_DISP_YPOS 80 
+#define MEASURE_DISP_YPOS 80    // maesuring display y position (start position)
 #define MEASURE_DISP_XPOS 10    // maesuring display x position (start position)
 #define MEASURE_DISP_SIZE 5     // charactor size
 #define MEASURE_DISP_SPACE 40   // charactor spacing ( x position increse by this value )
-#define TEMPO_DISP_TAIL   130
 
 #define TEMPO_TEXT_SIZE 3      // テンポ表示の大きさ         
 #define TEMPO_TEXT_XPOS 10     // テンポ表示のx座標
@@ -20,6 +19,23 @@
 #define THE4TH          4       // the 4th sample
 
 #define CHATTERING_TIME 50      // Time to pass the chatter (msec)
+
+#define NOTES_TRI_XPOS     54  //音符の三角形部分の第一頂点のx座標
+#define NOTES_TRI_YPOS     80  //音符の三角形部分の第一頂点のy座標
+#define NOTES_TRI_YPOS_2ND 90  //音符の三角形部分の第二頂点のy座標
+#define NOTES_TRI_YPOS_3RD 70  //音符の三角形部分の第三頂点のy座標
+#define NOTES_SQU_XPOS     49  //音符の四角形部分のx座標
+#define NOTES_SQU_YPOS     80  //音符の四角形部分のy座標
+#define NOTES_SQU_HEIGHT   10  //音符の四角形部分の高さ
+#define NOTES_SQU_WIDTH    5   //音符の四角形部分の横幅
+#define NOTES_LINE_HEIGHT  45  //音符の線部分の高さ
+#define NOTES_LINE_WIDTH   2   //音符の線部分の横幅
+#define NOTES_ROUND_XPOS   30  //音符の楕円部分のx座標
+#define NOTES_ROUND_YPOS   115 //音符の楕円部分のy座標
+#define NOTES_ROUND_HEIGHT 20  //音符の楕円部分の高さ
+#define NOTES_ROUND_WIDTH  15  //音符の楕円部分の横幅
+#define NOTES_ROUND_RADIUS 8   //音符の楕円部分の半径
+#define NOTES_SPACE        50  //音符の間隔
 
 static int xpos;  // メニュー画面での選択項目
 static int tempotimes = THE1ST;
@@ -69,9 +85,6 @@ void Tempo_Disp(int tempover) {
     if(tempotimes == THE1ST){
       tft.fillRect(0, MEASURE_DISP_YPOS, 320, 50, TFT_WHITE);
     }
-    //tft.setTextColor(TFT_RED);
-    //tft.setTextSize(MEASURE_DISP_SIZE);
-    //tft.drawString( "o", xpos, MEASURE_DISP_YPOS );
     if(tempover == 1){
       Settempo_Notes(tempotimes);
     }
@@ -92,7 +105,6 @@ void Tempo_Disp(int tempover) {
 int RandamList(int num){
   int swap=0; //シャッフルで使用する変数
   int temp=0; //シャッフルで使用する変数
-  //int rnd[8]; //乱数用配列
 
   if(num == 1){
     //配列に1から25までの数字を順番に入れて初期化
@@ -114,7 +126,6 @@ int RandamList(int num){
 
 unsigned long Measure() {
   int times ;                          // sound pulse counter
-  //unsigned long pasttime;             // time measure var
   int xbit = MEASURE_DISP_XPOS;
   char  TimeStr[10];                  // for time value diaplay
 
@@ -133,10 +144,8 @@ unsigned long Measure() {
       pasttime = millis() - pasttime;         // get totla time
     }
 
-    //Serial.print("kiteruyo");
     tft.drawString( "o", xbit, MEASURE_DISP_YPOS );
-    //SoundNotes(times);
-
+    
     if ( times < THE4TH ) {
       xbit += MEASURE_DISP_SPACE;
       delay( CHATTERING_TIME );               // pass chattering time
@@ -155,30 +164,24 @@ unsigned long Measure() {
 }
 
 void Settempo_Notes(int num){ //音符の描写
-  tft.fillRect(49+(num-1)*50, 80, 2, 45, TFT_BLACK);
-  tft.fillRect(49+(num-1)*50, 80, 5, 10, TFT_BLACK);
-  tft.fillTriangle(54+(num-1)*50, 80, 54+(num-1)*50, 90, 70+(num-1)*50, 90, TFT_BLACK);
-  tft.fillRoundRect(30+(num-1)*50, 115, 20, 15, 8, TFT_BLACK);
+  tft.fillRect(NOTES_SQU_XPOS+(num-1)*NOTES_SPACE, NOTES_SQU_YPOS, NOTES_LINE_WIDTH, NOTES_LINE_HEIGHT, TFT_BLACK);
+  tft.fillRect(NOTES_SQU_XPOS+(num-1)*NOTES_SPACE, NOTES_SQU_YPOS, NOTES_SQU_WIDTH, NOTES_SQU_HEIGHT, TFT_BLACK);
+  tft.fillTriangle(NOTES_TRI_XPOS+(num-1)*NOTES_SPACE, NOTES_TRI_YPOS, NOTES_TRI_XPOS+(num-1)*NOTES_SPACE, NOTES_TRI_YPOS_2ND, NOTES_TRI_YPOS_3RD+(num-1)*NOTES_SPACE, NOTES_TRI_YPOS_2ND, TFT_BLACK);
+  tft.fillRoundRect(NOTES_ROUND_XPOS+(num-1)*NOTES_SPACE, NOTES_ROUND_YPOS, NOTES_ROUND_HEIGHT, NOTES_ROUND_WIDTH, NOTES_ROUND_RADIUS, TFT_BLACK);
 
   return;
 }
 
 void Sendcode_Notes(int num){ //音符の描写
   int colornum;
-  uint32_t colorlist[8] = { TFT_RED , TFT_BLUE , TFT_PURPLE , TFT_GREEN , TFT_ORANGE , TFT_YELLOW , TFT_GREENYELLOW , TFT_PINK };
-
-  //colorlist = { "TFT_RED" , "TFT_BLUE" , "TFT_PURPLE" , "TFT_GREEN" , "TFT_RED" , "TFT_YELLOW" , "TFT_GREENYELLOW" , "TFT_PINK" };
-  
-  //randomSeed(analogRead(0));
-  //random();
-  //rannum = random(0,7);
+  uint32_t colorlist[8] = { TFT_RED , TFT_BLUE , TFT_PURPLE , TFT_GREEN , TFT_ORANGE , TFT_CYAN , TFT_GREENYELLOW , TFT_PINK };
 
   colornum = RandamList(num);
   
-  tft.fillRect(49+(num-1)*50, 80, 2, 45, colorlist[colornum]);
-  tft.fillRect(49+(num-1)*50, 80, 5, 10, colorlist[colornum]);
-  tft.fillTriangle(54+(num-1)*50, 80, 54+(num-1)*50, 90, 70+(num-1)*50, 90, colorlist[colornum]);
-  tft.fillRoundRect(30+(num-1)*50, 115, 20, 15, 8, colorlist[colornum]);
+  tft.fillRect(NOTES_SQU_XPOS+(num-1)*NOTES_SPACE, NOTES_SQU_YPOS, NOTES_LINE_WIDTH, NOTES_LINE_HEIGHT, colorlist[colornum]);
+  tft.fillRect(NOTES_SQU_XPOS+(num-1)*NOTES_SPACE, NOTES_SQU_YPOS, NOTES_SQU_WIDTH, NOTES_SQU_HEIGHT, colorlist[colornum]);
+  tft.fillTriangle(NOTES_TRI_XPOS+(num-1)*NOTES_SPACE, NOTES_TRI_YPOS, NOTES_TRI_XPOS+(num-1)*NOTES_SPACE, NOTES_TRI_YPOS_2ND, NOTES_TRI_YPOS_3RD+(num-1)*NOTES_SPACE, NOTES_TRI_YPOS_2ND, colorlist[colornum]);
+  tft.fillRoundRect(NOTES_ROUND_XPOS+(num-1)*NOTES_SPACE, NOTES_ROUND_YPOS, NOTES_ROUND_HEIGHT, NOTES_ROUND_WIDTH, NOTES_ROUND_RADIUS, colorlist[colornum]);
 
   return;
 }
