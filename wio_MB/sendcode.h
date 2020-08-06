@@ -1,4 +1,4 @@
-##define HITON  1  //打音観測した
+#define HITON  1  //打音観測した
 #define HITOFF 0  //打音観測しない
 
 void NowTempo_Text(void); //今のテンポを表示しているときのタイトル
